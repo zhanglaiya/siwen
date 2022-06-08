@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+volume/mysql/data
+volume/mysql/conf.d
