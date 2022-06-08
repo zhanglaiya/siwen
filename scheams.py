@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 from typing import Union
 
 
@@ -20,3 +20,13 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Union[str, None] = None
+
+
+class RegisterModel(BaseModel):
+    username: str = Field(..., max_length=10)
+    password: str = Field(..., regex='', max_length=12, min_length=6)
+
+    @validator('username')
+    def username_must_be_that(cls, val):
+        
+        return val

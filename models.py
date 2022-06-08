@@ -3,7 +3,7 @@ fake_users_db = {
         "username": "johndoe",
         "full_name": "John Doe",
         "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
+        "hashed_password": "$2b$12$YldIMit6gLdQMB5kU7M92uvmU7L1uxNBBucczUI2jmpP.xLEc8meG",
         "disabled": False,
     },
     "alice": {
