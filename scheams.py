@@ -10,7 +10,7 @@ class User(BaseModel):
 
 
 class UserInDB(User):
-    hashed_password: str
+    password: str
 
 
 class Token(BaseModel):
@@ -22,11 +22,6 @@ class TokenData(BaseModel):
     username: Union[str, None] = None
 
 
-class RegisterModel(BaseModel):
-    username: str = Field(..., max_length=10)
-    password: str = Field(..., regex='', max_length=12, min_length=6)
-
-    @validator('username')
-    def username_must_be_that(cls, val):
-        
-        return val
+class RegisterIn(BaseModel):
+    username: str = Field(..., min_length=6, max_length=12, regex='[a-zA-Z_][a-zA-Z0-9_]{5,11}')
+    password: str = Field(..., min_length=6)
