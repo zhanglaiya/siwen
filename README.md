@@ -1,2 +1,2 @@
-# siwen
-siwen是一个笔记应用
+# seven
+seven是一个笔记应用
