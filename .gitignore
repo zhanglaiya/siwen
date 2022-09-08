@@ -130,3 +130,5 @@ dmypy.json
 
 volume/mysql/data
 volume/mysql/conf.d
+
+.idea/
