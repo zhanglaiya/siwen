@@ -1,14 +1,15 @@
 import argparse
-from . import __version__
+import optparse
+from . import version
 
 
 def get_version():
-    return __version__
+    return version
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--version', dest='version')
+    parser.add_argument('-v', '--version', dest='version', action='store_true', help='ss')
     return parser.parse_args()
 
 
