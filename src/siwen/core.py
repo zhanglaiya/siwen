@@ -1,6 +1,10 @@
 import os
 
 
+class Siwen:
+    pass
+
+
 def get_files(path, ext=None):
     for s in os.listdir(path):
         p = os.path.join(path, s)

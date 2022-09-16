@@ -4,8 +4,7 @@ import configparser
 import os
 
 from siwen.core import get_files
-from .server import app
-
+from .server import app, add_post_rule
 
 from . import __version__, confparser
 
@@ -51,7 +50,7 @@ def create_post(path):
 
 
 def _server():
-
+    add_post_rule()
     app.run(host='localhost', port=1228, debug=True, extra_files=get_files(os.getcwd()))
 
 
