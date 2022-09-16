@@ -10,10 +10,23 @@ conf = confparser.read()
 content_path = os.path.join(os.getcwd(), 'content')
 content_path_length = len(content_path)
 
+theme_dir_path = os.path.join(os.getcwd(), 'themes')
+theme_name = conf['project'].get('theme', 'default')
+
+theme = os.path.join(theme_dir_path, theme_name)
+if not os.path.exists(theme):
+    raise OSError(f'{theme} 主题路径不存在')
+
+if os.path.isfile(theme):
+    with open(theme, 'r') as f:
+        theme = os.path.join(theme_dir_path, f.read().strip())
+
+print(os.listdir(theme))
+
 app = Flask(
     __name__,
-    static_folder=os.path.join(os.getcwd(), 'themes', conf['project'].get('theme', 'default'), 'static'),
-    template_folder=os.path.join(os.getcwd(), 'themes', conf['project'].get('theme', 'default'), 'templates')
+    static_folder=os.path.join(theme, 'static'),
+    template_folder=os.path.join(theme, 'templates')
 )
 
 
