@@ -3,21 +3,21 @@ import re
 
 class Markdown:
 
-    title_pattern = re.compile(r'---\n(.*?)\n---', re.S)
-    h_pattern = re.compile(r'(#{1,6}) (.*)?')
-    b_pattern_1 = re.compile(r'\*\*(.*?)\*\*')
-    b_pattern_2 = re.compile(r'\_\_(.*?)\_\_')
-    i_pattern_1 = re.compile(r'\*(.*?)\*')
-    i_pattern_2 = re.compile(r'\_(.*?)\_')
+    title_ptn = re.compile(r'---\n(.*?)\n---', re.S)
+    h_ptn = re.compile(r'(#{1,6}) (.*)?')
+    b_ptn1 = re.compile(r'\*\*(.*?)\*\*')
+    b_ptn2 = re.compile(r'\_\_(.*?)\_\_')
+    i_ptn1 = re.compile(r'\*(.*?)\*')
+    i_ptn2 = re.compile(r'\_(.*?)\_')
 
-    del_pattern = re.compile(r'~~(.*?)~~')
+    del_ptn = re.compile(r'~~(.*?)~~')
 
     code_ptn = re.compile(r'\`(.*?)\`')
 
-    hr_pattern_1 = re.compile(r'\s*\*\s*\*\s*\*\s*')
-    hr_pattern_2 = re.compile(r'[\s\*]')
+    hr_ptn1 = re.compile(r'\s*\*\s*\*\s*\*\s*')
+    hr_ptn2 = re.compile(r'[\s\*]')
 
-    a_pattern = re.compile(r'\[(.*?)\]\((.*?)\)')
+    a_ptn = re.compile(r'\[(.*?)\]\((.*?)\)')
 
 
     def __init__(self, path):
@@ -33,7 +33,7 @@ class Markdown:
         return ''
 
     def pop_settings(self):
-        self.data = self.title_pattern.sub(self.title_repl, self.data)
+        self.data = self.title_ptn.sub(self.title_repl, self.data)
         return self.settings
 
     def repl_h(self, data):
@@ -56,7 +56,7 @@ class Markdown:
         return f'<code>{data.group(1)}</code>'
 
     def repl_hr(self, line):
-        if self.hr_pattern_1.match(line) and not self.hr_pattern_2.search(line):
+        if self.hr_ptn1.match(line) and not self.hr_ptn2.search(line):
             return '<hr>'
         return line
 
@@ -64,15 +64,14 @@ class Markdown:
     def to_html(self):
         content = ''
         for line in self.data.split('\n'):
-            print(line)
 
-            line = self.b_pattern_1.sub(self.repl_b, line)
-            line = self.b_pattern_2.sub(self.repl_b, line)
-            line = self.i_pattern_1.sub(self.repl_i, line)
-            line = self.i_pattern_2.sub(self.repl_i, line)
-            line = self.del_pattern.sub(self.repl_del, line)
-            line = self.h_pattern.sub(self.repl_h, line)
-            line = self.a_pattern.sub(self.repl_a, line)
+            line = self.b_ptn1.sub(self.repl_b, line)
+            line = self.b_ptn2.sub(self.repl_b, line)
+            line = self.i_ptn1.sub(self.repl_i, line)
+            line = self.i_ptn2.sub(self.repl_i, line)
+            line = self.del_ptn.sub(self.repl_del, line)
+            line = self.h_ptn.sub(self.repl_h, line)
+            line = self.a_ptn.sub(self.repl_a, line)
             line = self.code_ptn.sub(self.repl_code, line)
             line = self.repl_hr(line)
             if line.endswith('  '):
