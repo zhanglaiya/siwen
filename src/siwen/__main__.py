@@ -4,7 +4,6 @@ import configparser
 import os
 
 from siwen.core import get_files
-from .server import app, add_post_rule
 
 from . import __version__, confparser
 
@@ -50,8 +49,25 @@ def create_post(path):
 
 
 def _server():
+    from .server import app, add_post_rule
     add_post_rule()
     app.run(host='localhost', port=1228, debug=True, extra_files=get_files(os.getcwd()))
+
+
+def _build():
+    from .build import generate_html
+    generate_html()
+    file_name = 'testww.txt'
+    with open(file_name, 'a+') as f:  # 例如打开一个大文件
+        fsize = os.path.getsize(file_name)  # 先计算大文件大小
+        print(fsize)
+        line_list_size = 0
+
+        for line_list in f.readlines():
+            line_list_size += sys.getsizeof(line_list)  # 计算处理文件大小
+            done = int(float(line_list_size) / fsize * 10)  # 计算进度
+            sys.stdout.write("r[%s%s] %d%%" % ('█' * done * 2, ' ' * (20 - done * 2), 10 * done))
+            sys.stdout.flush()  # 刷新到控制台
 
 
 def parse_args():
@@ -62,6 +78,8 @@ def parse_args():
     new = subparsers.add_parser(name='new', help='新建 站点/主题')
     dev = subparsers.add_parser(name='server', help='启动开发服务器')
     dev.set_defaults(dev=_server)
+    bld = subparsers.add_parser(name='build', help='编译生成html')
+    bld.set_defaults(bld=_build)
     new.add_argument('post_path')
     new_subparsers = new.add_subparsers(title='可用的子命令')
     site = new_subparsers.add_parser('site', help='新建站点')
@@ -83,12 +101,14 @@ def main():
         args.new(args)
     elif hasattr(args, 'dev'):
         args.dev()
-    elif args.post_path:
+    elif hasattr(args, 'bld'):
+        args.bld()
+    elif hasattr(args, 'post_path'):
         create_post(args.post_path)
     elif args.version:
         print(get_version())
     else:
-        print('没有任何参数')
+        _build()
 
 
 if __name__ == '__main__':
