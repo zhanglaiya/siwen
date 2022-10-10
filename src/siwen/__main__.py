@@ -94,7 +94,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print(args)
+    # print(args)
     if hasattr(args, 'new'):
         args.new(args)
     elif hasattr(args, 'dev'):
