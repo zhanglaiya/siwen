@@ -1,14 +1,18 @@
-import sys
+import os
 import argparse
 import configparser
-import os
 
-from siwen.core import get_files
+from siwen import __version__
 
-from . import __version__, confparser
+from siwen.core import Siwen
+from siwen.build import Builder
+from siwen.server import Server
 
 
-INIT_CONTENT = '---\ntitle:hello siwen\ndraft:true\n---'''
+INIT_CONTENT = '''---
+title:hello siwen
+draft:true
+---'''
 
 
 def get_version():
@@ -49,25 +53,19 @@ def create_post(path):
 
 
 def _server():
-    from .server import app, add_post_rule
-    add_post_rule()
-    app.run(host='localhost', port=1228, debug=True, extra_files=get_files(os.getcwd()))
+    xsw = Siwen()
+    xsw.parse_config()
+    server = Server(xsw.CWD, xsw.static, xsw.template)
+    server.add_url_rule(xsw.conf)
+    server.run()
 
 
 def _build():
-    from .build import generate_html
-    generate_html()
-    file_name = 'testww.txt'
-    with open(file_name, 'a+') as f:  # 例如打开一个大文件
-        fsize = os.path.getsize(file_name)  # 先计算大文件大小
-        print(fsize)
-        line_list_size = 0
-
-        for line_list in f.readlines():
-            line_list_size += sys.getsizeof(line_list)  # 计算处理文件大小
-            done = int(float(line_list_size) / fsize * 10)  # 计算进度
-            sys.stdout.write("r[%s%s] %d%%" % ('█' * done * 2, ' ' * (20 - done * 2), 10 * done))
-            sys.stdout.flush()  # 刷新到控制台
+    xsw = Siwen()
+    xsw.parse_config()
+    builder = Builder(xsw.CWD, xsw.static, xsw.template)
+    builder.set_server_name(xsw.serverName)
+    builder.generate_html(xsw.conf)
 
 
 def parse_args():

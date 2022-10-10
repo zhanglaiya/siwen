@@ -19,7 +19,6 @@ class Markdown:
 
     a_ptn = re.compile(r'\[(.*?)\]\((.*?)\)')
 
-
     def __init__(self, path):
         with open(path, 'r', encoding='utf8') as f:
             self.data = f.read()
@@ -59,7 +58,6 @@ class Markdown:
         if self.hr_ptn1.match(line) and not self.hr_ptn2.search(line):
             return '<hr>'
         return line
-
 
     def to_html(self):
         content = ''
