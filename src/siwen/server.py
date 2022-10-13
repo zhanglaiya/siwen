@@ -1,19 +1,16 @@
-import os
-
 from flask import Flask, render_template
 from .markdown import Markdown
-from siwen.core import get_files
+from .core import g, get_files
 
 
 class Server:
 
-    def __init__(self, path, static_folder, template_folder):
-        self.path = path
-        self.content_path = os.path.join(path, 'content')
+    def __init__(self):
+        self.content_path = g.ContentPath
         self.app = Flask(
             __name__,
-            static_folder=static_folder,
-            template_folder=template_folder
+            static_folder=g.static,
+            template_folder=g.template
         )
 
     def config_set(self, k, v):
@@ -22,7 +19,7 @@ class Server:
     def get_or_select_template(self, *args, **kwargs):
         return self.app.jinja_env.get_or_select_template(*args, **kwargs)
 
-    def add_url_rule(self, conf):
+    def add_url_rule(self):
         posts = []
 
         def post(data):
@@ -31,10 +28,10 @@ class Server:
 
             return view_func
 
-        for file in get_files(self.content_path):
+        for file in get_files(g.ContentPath):
             md = Markdown(file)
             settings = md.pop_settings()
-            rule = file[len(self.content_path):].replace('\\', '/').replace('.md', '')
+            rule = file[len(g.ContentPath):].replace('\\', '/').replace('.md', '')
             settings['href'] = rule
             posts.append(settings)
             self.app.add_url_rule(
@@ -44,7 +41,7 @@ class Server:
             )
 
         def index():
-            return render_template('index.html', **conf, posts=posts)
+            return render_template('index.html', **g.conf, posts=posts)
 
         self.app.add_url_rule(
             '/',
@@ -57,5 +54,5 @@ class Server:
             host='localhost',
             port=1228,
             debug=True,
-            extra_files=get_files(self.path)
+            extra_files=get_files(g.CWD)
         )

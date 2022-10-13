@@ -32,6 +32,7 @@ class Siwen:
         self.conf = None
         self.static = None
         self.template = None
+        self.parse_config()
 
     def parse_config(self):
         config_file_path = os.path.join(self.CWD, 'config.ini')
@@ -61,6 +62,9 @@ class Siwen:
             self.ContentPath,
             ext='.md'
         )
+
+
+g = Siwen()
 
 
 if __name__ == '__main__':

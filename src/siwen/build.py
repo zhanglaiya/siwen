@@ -1,21 +1,14 @@
 import os
 
-from siwen.core import get_files
-from siwen.server import Server
-from siwen.markdown import Markdown
+from .core import g, get_files
+from .server import Server
+from .markdown import Markdown
 
 
 class Builder:
 
-    def __init__(self, path, static_folder, template_folder):
-
-        self.path = path
-        self.content_path = os.path.join(path, 'content')
-        self.server = Server(
-            path,
-            static_folder,
-            template_folder
-        )
+    def __init__(self):
+        self.server = Server()
 
     def set_server_name(self, server_name):
         self.server.config_set('SERVER_NAME', server_name)
@@ -23,14 +16,14 @@ class Builder:
     def generate_html(self, conf):
         index = self.server.get_or_select_template('index.html')
         post = self.server.get_or_select_template('post.html')
-        docs = os.path.join(self.path, 'docs')
+        docs = os.path.join(g.CWD, 'docs')
         result = os.path.join(docs, 'index.html')
 
         posts = []
-        for file in get_files(self.content_path):
+        for file in get_files(g.ContentPath):
             md = Markdown(file)
             data = md.parse()
-            relative_path = file[len(self.content_path):].replace('\\', '/')
+            relative_path = file[len(g.ContentPath):].replace('\\', '/')
             post_relative_dir = relative_path.strip('/').replace('.md', '')
 
             tmp_base = docs

@@ -2,11 +2,10 @@ import os
 import argparse
 import configparser
 
-from siwen import __version__
+from . import __version__
 
-from siwen.core import Siwen
-from siwen.build import Builder
-from siwen.server import Server
+from .build import Builder
+from .server import Server
 
 
 INIT_CONTENT = '''---
@@ -53,19 +52,16 @@ def create_post(path):
 
 
 def _server():
-    xsw = Siwen()
-    xsw.parse_config()
-    server = Server(xsw.CWD, xsw.static, xsw.template)
-    server.add_url_rule(xsw.conf)
+    server = Server()
+    server.add_url_rule()
     server.run()
 
 
 def _build():
-    xsw = Siwen()
-    xsw.parse_config()
-    builder = Builder(xsw.CWD, xsw.static, xsw.template)
-    builder.set_server_name(xsw.serverName)
-    builder.generate_html(xsw.conf)
+
+    builder = Builder()
+    builder.set_server_name()
+    builder.generate_html()
 
 
 def parse_args():
