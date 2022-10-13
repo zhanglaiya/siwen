@@ -10,10 +10,10 @@ class Builder:
     def __init__(self):
         self.server = Server()
 
-    def set_server_name(self, server_name):
-        self.server.config_set('SERVER_NAME', server_name)
+    def set_server_name(self):
+        self.server.config_set('SERVER_NAME', g.serverName)
 
-    def generate_html(self, conf):
+    def generate_html(self):
         index = self.server.get_or_select_template('index.html')
         post = self.server.get_or_select_template('post.html')
         docs = os.path.join(g.CWD, 'docs')
@@ -42,5 +42,5 @@ class Builder:
 
         with open(result, 'w', encoding='utf8') as fout:
 
-            html_content = index.render(**conf, posts=posts)
+            html_content = index.render(**g.conf, posts=posts)
             fout.write(html_content)  # 写入模板 生成html
